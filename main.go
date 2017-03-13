@@ -2,11 +2,11 @@ package main
 
 
 import (
-	"contactform/populate"
+	"contactform/http"
 	"fmt"
 )
 
 func main(){
-	populate.FillTempl("Foo", "Bar", "dasda")
 	fmt.Printf("OK")
+	http.Serve()
 }

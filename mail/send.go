@@ -3,25 +3,22 @@ package mail
 import (
 	"gopkg.in/gomail.v2"
 	"time"
-	"bgtasks/config"
+	"contactform/config"
 )
 
-func Send(date time.Time, csvfile string) {
-	cfg := config.GetMailConfig("../config")
-
+func Send(date time.Time, pdffile string, to_addr string) {
+	cfg := config.GetMailConfig("config/")
 	m := gomail.NewMessage()
 	m.SetHeaders(map[string][]string{
 		"From":    {cfg.From},
-		"To":      cfg.Tolist,
-		"Subject": {"Sign ups " + date.Format("Mon Jan 2 2006")},
+		"To":      {to_addr},
+		"Subject": {"Form PDF"},
 	})
-
-	m.SetBody("text/html", "All<br><br>This email contains a CSV of new signups since " + date.Format("Mon Jan 2 2006 15:04:05") + "<br><br>See attached for details ...")
-	m.Attach(csvfile)
-
+	//TODO: change body to html, change subject
+	m.SetBody("text/html", "<b>Hello,</b><br>This email contains a PDF file with data from the registration form. <br> Please see the attached file.")
+	m.Attach(pdffile)
 	d := gomail.NewDialer(cfg.Host, cfg.Port, cfg.Username, cfg.Password)
 	s, err := d.Dial()
-	// Send the email to Bob, Cora and Dan.
 	if err != nil {
 		panic(err)
 	}
@@ -29,6 +26,5 @@ func Send(date time.Time, csvfile string) {
         panic("Could not send email " + err.Error())
     }
     m.Reset()
-
 }
 
